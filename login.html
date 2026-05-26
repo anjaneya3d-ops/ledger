@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in — Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-body">
+  <div class="login-wrap">
+    <div class="login-art">
+      <div class="art-mark">
+        <span class="mark-line">est.</span>
+        <span class="mark-year">2026</span>
+      </div>
+      <h1 class="art-title">Ledger.</h1>
+      <p class="art-sub">A quiet, careful place for your numbers.</p>
+      <div class="art-quote">
+        <p><em>"Show me the data,</em><br>and I'll show you the truth."</p>
+      </div>
+      <div class="art-foot">
+        <span>Meesho · Flipkart</span>
+        <span>Verified math · 36 tests</span>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-head">
+        <p class="eyebrow">Welcome back</p>
+        <h2>Sign in to your ledger</h2>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="form-field">
+          <label>Username</label>
+          <input type="text" id="username" autocomplete="username" required autofocus>
+        </div>
+        <div class="form-field">
+          <label>Password</label>
+          <input type="password" id="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn-primary btn-full">
+          <span>Sign in</span>
+          <span class="btn-arrow">→</span>
+        </button>
+        <p class="form-error" id="login-error"></p>
+      </form>
+
+      <div class="login-footer">
+        <p class="hint">First time? Use <code>admin</code> / <code>admin</code> — change it on the inside.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errEl = document.getElementById('login-error');
+      errEl.textContent = '';
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.error || 'Login failed'; return; }
+        window.location.href = '/';
+      } catch (err) {
+        errEl.textContent = 'Network error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
